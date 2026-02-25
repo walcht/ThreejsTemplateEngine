@@ -130,7 +130,8 @@ class JoltPhysics implements IPhysicsEngine {
           this._tmpVec3!.SetZ(bx.size.z / 2);
           const shape = new this._jolt!.BoxShape(this._tmpVec3!);
 
-          const _pos = rb.gameObject.obj.localToWorld(bx.center);
+          const _pos = new Vector3().copy(bx.center);
+          rb.gameObject.obj.localToWorld(_pos);
 
           this._tmpRVec3!.SetX(_pos.x);
           this._tmpRVec3!.SetY(_pos.y);

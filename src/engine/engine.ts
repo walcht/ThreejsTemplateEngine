@@ -1,4 +1,4 @@
-import { AmbientLight, BoxGeometry, BufferGeometry, Color, DirectionalLight, Mesh, OrthographicCamera, PlaneGeometry, Scene, Timer, Vector3, WebGLRenderer } from "three";
+import { AmbientLight, BoxGeometry, BufferGeometry, Color, DirectionalLight, Group, Mesh, OrthographicCamera, PlaneGeometry, Scene, Timer, Vector3, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { MeshPhongMaterial } from "three";
 import type { MonoBehaviour } from "./MonoBehaviour";
@@ -7,6 +7,7 @@ import { JoltPhysics } from "./physics/joltphysics/JoltPhysics";
 import { GameObject } from "./GameObject";
 import { BoxCollider } from "./physics/BoxCollider";
 import { MotionType, Rigidbody } from "./physics/Rigidbody";
+import { BoxColliderVisualizer } from "../editor/BoxColliderVisualizer";
 
 type EngineOptions = {
   container: HTMLCanvasElement;
@@ -159,7 +160,8 @@ class Engine {
       cube.position.setY(2);
 
       const go = new GameObject(cube, LAYER_MOVING);
-      go.AddComponent<BoxCollider>(BoxCollider);
+      const bc = go.AddComponent(BoxCollider);
+      this.addMonoBehaviour(go.AddComponent(BoxColliderVisualizer));
       const rb = go.AddComponent(Rigidbody);
       this._physicsEngine!.add(rb);
     }
