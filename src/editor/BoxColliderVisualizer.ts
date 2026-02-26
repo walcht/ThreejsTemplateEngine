@@ -44,7 +44,6 @@ class BoxColliderVisualizer extends MonoBehaviour {
 
   private _onRegenerate() {
     this._group.clear();
-    console.log(this._prevCenter);
     this._group.add(...constructCubeLineMeshes(this._prevCenter, this._prevSize, this._mat));
   }
 

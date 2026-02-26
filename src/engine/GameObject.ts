@@ -62,7 +62,7 @@ class GameObject implements IGameObject {
   public AddComponent<T extends Component>(type: IConstructor<T>, ...args: any[]): T {
     // holyshit - TS do fucking suck, this is the ugliest piece of garbage code
     // I have ever fucking seen...
-    const cmp = new type(this, args);
+    const cmp = new type(this, ...args);
     this._components.push(cmp);
     return cmp;
   };

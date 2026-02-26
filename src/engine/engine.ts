@@ -1,13 +1,14 @@
-import { AmbientLight, BoxGeometry, BufferGeometry, Color, DirectionalLight, Group, Mesh, OrthographicCamera, PlaneGeometry, Scene, Timer, Vector3, WebGLRenderer } from "three";
+import { AmbientLight, BoxGeometry, BufferGeometry, CircleGeometry, Color, ConeGeometry, DirectionalLight, Group, Mesh, OrthographicCamera, PlaneGeometry, Scene, Timer, Vector3, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { MeshPhongMaterial } from "three";
 import type { MonoBehaviour } from "./MonoBehaviour";
 import type { IPhysicsEngine } from "./physics/PhysicsEngine";
 import { JoltPhysics } from "./physics/joltphysics/JoltPhysics";
 import { GameObject } from "./GameObject";
-import { BoxCollider } from "./physics/BoxCollider";
+import { BoxCollider, type BoxColliderOptions } from "./physics/BoxCollider";
 import { MotionType, Rigidbody } from "./physics/Rigidbody";
 import { BoxColliderVisualizer } from "../editor/BoxColliderVisualizer";
+import { OrientationGizmo } from "../editor/OrientationGizmo";
 
 type EngineOptions = {
   container: HTMLCanvasElement;
@@ -32,6 +33,12 @@ class Engine {
 
   public static readonly UNITY_LINE_GEOMETRY: BufferGeometry = new BufferGeometry()
     .setFromPoints([new Vector3(0, 0, 0), new Vector3(1, 0, 0)]);
+
+  public static readonly UNIT_CUBE_GEOMETRY: BoxGeometry = new BoxGeometry(1, 1, 1);
+
+  public static readonly UNIT_CONE_GEOMETRY: ConeGeometry = new ConeGeometry(1, 1, 10);
+
+  public static readonly UNIT_CIRCLE_GEOMETRY: CircleGeometry = new CircleGeometry(1, 24);
 
   //////////////////////////////////////////////////////////////////////////////
 
@@ -81,9 +88,13 @@ class Engine {
       this._onResize();
     });
     this._onResize();
-  }
 
-  private initGraphics() { }
+    // TODO: remove - this should be moved to editor code
+    {
+      const go = new GameObject(new Group(), 10);
+      this.addMonoBehaviour(go.AddComponent(OrientationGizmo));
+    }
+  }
 
   private async initPhysics() {
     this._physicsEngine = new JoltPhysics();
@@ -103,7 +114,6 @@ class Engine {
 
     // this is only valid for WebGPU backend
     // await this.renderer.init();
-    this.initGraphics();
     await this.initPhysics();
 
     console.log("[physics] Jolt physics engine initialized");
@@ -160,7 +170,7 @@ class Engine {
       cube.position.setY(2);
 
       const go = new GameObject(cube, LAYER_MOVING);
-      const bc = go.AddComponent(BoxCollider);
+      go.AddComponent(BoxCollider);
       this.addMonoBehaviour(go.AddComponent(BoxColliderVisualizer));
       const rb = go.AddComponent(Rigidbody);
       this._physicsEngine!.add(rb);
@@ -174,7 +184,9 @@ class Engine {
       plane.rotateX(-90 * Math.PI / 180);
 
       const go = new GameObject(plane, LAYER_NON_MOVING);
-      go.AddComponent<BoxCollider>(BoxCollider);
+      const opts: BoxColliderOptions = { center: new Vector3(0, -1, 0), extent: new Vector3(10, 10, 0.5) };
+      go.AddComponent(BoxCollider, opts);
+      this.addMonoBehaviour(go.AddComponent(BoxColliderVisualizer));
       const rb = go.AddComponent(Rigidbody);
       rb.motionType = MotionType.STATIC;
       this._physicsEngine!.add(rb);

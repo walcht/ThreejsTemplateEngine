@@ -6,7 +6,7 @@ type BoxColliderOptions = {
   /* Local box center (x, y, z) - defaults to (0, 0, 0) */
   center?: Vector3;
 
-  /* Full extent local size (width, height, depth) */
+  /* Full extent local size (width, height, depth) - defaults to (1, 1, 1) */
   extent?: Vector3;
 };
 
@@ -31,6 +31,7 @@ class BoxCollider extends Collider {
   public get size(): Vector3 {
     return this._size;
   }
+
   public set size(value: Vector3) {
     this._size = value;
     for (const [_, listener] of this._sizeListeners) {
@@ -38,10 +39,10 @@ class BoxCollider extends Collider {
     }
   }
 
-  constructor(gameObject: GameObject, options: BoxColliderOptions) {
+  constructor(gameObject: GameObject, options?: BoxColliderOptions) {
     super(gameObject, ColliderType.BOX_COLLIDER);
-    this._center = options.center || new Vector3(0, 0, 0);
-    this._size = options.extent || new Vector3(1, 1, 1);
+    this._center = options?.center || new Vector3(0, 0, 0);
+    this._size = options?.extent || new Vector3(1, 1, 1);
   }
 
   public registerCenterListener(listener: (center: Vector3) => void) {
@@ -64,4 +65,4 @@ class BoxCollider extends Collider {
 
 }
 
-export { BoxCollider };
+export { BoxCollider, type BoxColliderOptions };

@@ -35,12 +35,12 @@ class GridBehaviour extends MonoBehaviour {
 
   private _currCamLookDir: Vector3;
 
-  constructor(gameObject: GameObject, options: GridOptions) {
+  constructor(gameObject: GameObject, options?: GridOptions) {
 
     super(gameObject, true);
 
-    this._extent = options.extent || new Box3(new Vector3(-25, -25, -25), new Vector3(25, 25, 25));
-    this._spacing0 = options.spacing0 || 5;
+    this._extent = options?.extent || new Box3(new Vector3(-25, -25, -25), new Vector3(25, 25, 25));
+    this._spacing0 = options?.spacing0 || 5;
 
     this._currCamLookDir = new Vector3();
   }

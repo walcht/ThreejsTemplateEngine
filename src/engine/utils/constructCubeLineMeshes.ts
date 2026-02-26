@@ -18,14 +18,14 @@ function constructCubeLineMeshes(center: Vector3, size: Vector3, mat: Material):
    *    p1     p2
    *
    */
-  const p1 = new Vector3(center.x - he.x, center.y - he.y, center.z - he.z);
+  const p1 = new Vector3(center.x - he.x, center.y - he.y, center.z + he.z);
   const p2 = new Vector3(p1.x + size.x, p1.y, p1.z)
-  const p3 = new Vector3(p2.x, p2.y, p2.z + size.z);
-  const p4 = new Vector3(p1.x, p1.y, p1.z + size.z);
+  const p3 = new Vector3(p2.x, p2.y, p2.z - size.z);
+  const p4 = new Vector3(p3.x - size.x, p3.y, p3.z);
 
-  const p7 = new Vector3(center.x + he.x, center.y + he.y, center.z + he.z);
+  const p7 = new Vector3(center.x + he.x, center.y + he.y, center.z - he.z);
   const p8 = new Vector3(p7.x - size.x, p7.y, p7.z);
-  const p6 = new Vector3(p7.x, p7.y, p7.z - size.z);
+  const p6 = new Vector3(p7.x, p7.y, p7.z + size.z);
   const p5 = new Vector3(p6.x - size.x, p6.y, p6.z);
 
   // bottom
